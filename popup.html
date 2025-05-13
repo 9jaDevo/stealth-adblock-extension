@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Stealth Blocker</title>
-    <style>
-        body.dark {
-            background-color: #1e1e1e;
-            color: white;
-        }
-    </style>
+  <title>Stealth Blocker</title>
+  <style>
+    body.dark {
+      background-color: #1e1e1e;
+      color: white;
+    }
+  </style>
 </head>
-
 <body id="popupBody">
-    <h1>Ad & Tracker Blocker</h1>
-    <p>Status: <span id="status">Enabled</span></p>
-    <button id="openOptions">Settings</button>
-    <script>
-        chrome.storage.sync.get('darkMode', ({ darkMode }) => {
-            if (darkMode) document.getElementById('popupBody').classList.add('dark');
-        });
-        document.getElementById('openOptions').onclick = () => chrome.runtime.openOptionsPage();
-    </script>
+  <h1>Ad & Tracker Blocker</h1>
+  <p>Status: <span id="status">Enabled</span></p>
+  <button id="openOptions">Settings</button>
+  <script>
+    chrome.storage.sync.get('darkMode', ({ darkMode }) => {
+      if (darkMode) document.getElementById('popupBody').classList.add('dark');
+    });
+    document.getElementById('openOptions').onclick = () => chrome.runtime.openOptionsPage();
+  </script>
 </body>
-
 </html>
