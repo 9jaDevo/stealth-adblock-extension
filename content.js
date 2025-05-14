@@ -1,4 +1,6 @@
-chrome.storage.sync.get("replaceAds", ({ replaceAds }) => {
+chrome.storage.sync.get(["replaceAds", "isPaused"], ({ replaceAds, isPaused }) => {
+    if (isPaused) return;
+
     const elementsToRemove = [
         '[id^="ad"]', '[class*="ads"]', '[class*="sponsored"]', 'iframe[src*="ad"]',
         'div[class*="banner"]', 'div[class*="sponsor"]',

@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Stealth Ad & Tracker Blocker",
     "version": "1.0",
-    "description": "Blocks ads, popups, trackers, and malvertising stealthily like ExpressVPN.",
+    "description": "Blocks ads, popups, trackers, and malvertising stealthily.",
     "permissions": [
         "storage",
         "declarativeNetRequest",
