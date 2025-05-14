@@ -8,14 +8,25 @@
             background-color: #1e1e1e;
             color: white;
         }
+
+        body {
+            font-family: sans-serif;
+            padding: 15px;
+        }
+
+        button {
+            margin-top: 8px;
+            display: block;
+        }
     </style>
 </head>
 
 <body id="popupBody">
-    <h1>Ad & Tracker Blocker</h1>
+    <h1 style="font-size: 16px;">Ad & Tracker Blocker</h1>
     <p>Status: <span id="status">Enabled</span></p>
     <label><input type="checkbox" id="pauseToggle"> Pause Protection</label><br>
-    <button id="openOptions">Settings</button>
+    <button id="whitelistCurrent">Whitelist This Site</button>
+    <button id="openOptions">Full Settings</button>
     <script src="popup.js"></script>
 </body>
 

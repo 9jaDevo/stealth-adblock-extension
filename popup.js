@@ -1,12 +1,43 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const pauseToggle = document.getElementById("pauseToggle");
+    const whitelistBtn = document.getElementById("whitelistCurrent");
+
+    // Dark mode
     chrome.storage.sync.get(['darkMode', 'isPaused'], ({ darkMode, isPaused }) => {
-        if (darkMode) document.getElementById("popupBody").classList.add("dark");
-        document.getElementById("pauseToggle").checked = isPaused || false;
+        if (darkMode) document.body.classList.add("dark");
+        pauseToggle.checked = isPaused || false;
     });
 
-    document.getElementById("pauseToggle").addEventListener("change", (e) => {
-        chrome.storage.sync.set({ isPaused: e.target.checked });
+    // Toggle pause
+    pauseToggle.addEventListener("change", (e) => {
+        chrome.storage.sync.set({ isPaused: e.target.checked }, () => {
+            chrome.tabs.reload(); // refresh current tab
+        });
     });
 
+    // Whitelist current domain
+    whitelistBtn.addEventListener("click", () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            try {
+                const hostname = new URL(tabs[0].url).hostname;
+                chrome.storage.sync.get('whitelist', ({ whitelist = [] }) => {
+                    if (!whitelist.includes(hostname)) {
+                        whitelist.push(hostname);
+                        chrome.storage.sync.set({ whitelist }, () => {
+                            alert(`${hostname} has been whitelisted.`);
+                            chrome.tabs.reload(); // optional: force refresh
+                        });
+                    } else {
+                        alert(`${hostname} is already whitelisted.`);
+                    }
+                });
+            } catch (err) {
+                console.error("Could not extract hostname:", err);
+                alert("Invalid URL or unsupported tab.");
+            }
+        });
+    });
+
+    // Link to options
     document.getElementById("openOptions").onclick = () => chrome.runtime.openOptionsPage();
 });
