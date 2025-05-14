@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const syncToggle = document.getElementById('syncRules');
   const whitelistInput = document.getElementById('whitelistInput');
   const whitelistList = document.getElementById('whitelistList');
+  const clearButton = document.getElementById('clearWhitelist');
 
   chrome.storage.sync.get(['darkMode', 'replaceAds', 'syncRules', 'whitelist'], ({ darkMode, replaceAds, syncRules, whitelist }) => {
     darkToggle.checked = darkMode || false;
@@ -29,9 +30,24 @@ document.addEventListener('DOMContentLoaded', () => {
     whitelistInput.value = '';
   });
 
+  clearButton.addEventListener('click', () => {
+    chrome.storage.sync.set({ whitelist: [] });
+    whitelistList.innerHTML = '';
+  });
+
   function addToUI(site) {
     const li = document.createElement('li');
-    li.textContent = site;
+    li.textContent = site + ' ';
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => {
+      chrome.storage.sync.get('whitelist', ({ whitelist = [] }) => {
+        const newList = whitelist.filter(item => item !== site);
+        chrome.storage.sync.set({ whitelist: newList });
+        li.remove();
+      });
+    };
+    li.appendChild(removeBtn);
     whitelistList.appendChild(li);
   }
 });

@@ -1,5 +1,8 @@
-chrome.storage.sync.get(["replaceAds", "isPaused"], ({ replaceAds, isPaused }) => {
+chrome.storage.sync.get(["replaceAds", "isPaused", "whitelist"], ({ replaceAds, isPaused, whitelist }) => {
     if (isPaused) return;
+
+    const currentHost = window.location.hostname;
+    if ((whitelist || []).includes(currentHost)) return;
 
     const elementsToRemove = [
         '[id^="ad"]', '[class*="ads"]', '[class*="sponsored"]', 'iframe[src*="ad"]',
