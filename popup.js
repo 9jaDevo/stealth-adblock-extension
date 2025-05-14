@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toggle pause
     pauseToggle.addEventListener("change", (e) => {
         chrome.storage.sync.set({ isPaused: e.target.checked }, () => {
-            setTimeout(() => chrome.tabs.reload(), 200);
+            alert("Pause state updated. Please reload the page for changes to take effect.");
+            //setTimeout(() => chrome.tabs.reload(), 200);
         });
     });
 
@@ -24,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!whitelist.includes(hostname)) {
                         whitelist.push(hostname);
                         chrome.storage.sync.set({ whitelist }, () => {
-                            alert(`${hostname} has been whitelisted.`);
-                            setTimeout(() => chrome.tabs.reload(), 200);
+                            alert(`${hostname} has been added to your whitelist. Please reload the page.`);
+                            // setTimeout(() => chrome.tabs.reload(), 200);
                         });
                     } else {
                         alert(`${hostname} is already whitelisted.`);
