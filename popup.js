@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toggle pause
     pauseToggle.addEventListener("change", (e) => {
         chrome.storage.sync.set({ isPaused: e.target.checked }, () => {
-            chrome.tabs.reload(); // refresh current tab
+            setTimeout(() => chrome.tabs.reload(), 200);
         });
     });
 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         whitelist.push(hostname);
                         chrome.storage.sync.set({ whitelist }, () => {
                             alert(`${hostname} has been whitelisted.`);
-                            chrome.tabs.reload(); // optional: force refresh
+                            setTimeout(() => chrome.tabs.reload(), 200);
                         });
                     } else {
                         alert(`${hostname} is already whitelisted.`);
