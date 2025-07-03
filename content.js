@@ -11,6 +11,46 @@ chrome.storage.sync.get(["replaceAds", "isPaused", "whitelist"], ({ replaceAds, 
         'div[class*="googleads"]', 'div[id*="ad_container"]', 'section[data-ad-feedback]'
     ];
 
+    // Generic live stream ad containers (Twitch and similar)
+    if (currentHost.includes("live")) {
+        const liveAdSelectors = [
+            '[data-test-selector="sda-wrapper"]',
+            '[data-test-selector="sda-container"]',
+            '[data-test-selector="sda-transform"]',
+            '[data-test-selector="sda-frame"]',
+            '[data-test-selector="ad-banner-default-text"]',
+            '[data-test-selector="video-ad-label"]',
+            '[data-test-selector="video-ad-countdown"]',
+            '[data-a-target="ax-overlay"]',
+            '[data-a-target="outstream-ax-overlay"]',
+            '[data-a-target="amazon-video-ads-out-stream-iframe"]',
+            '[data-a-target="amazon-video-ads-in-stream-iframe"]',
+            '#amazon-video-ads-out-stream-iframe',
+            '#amazon-video-ads-in-stream-iframe',
+            '#amazon-companion-ad-div',
+            '#stream-lowerthird',
+            '.stream-display-ad__wrapper',
+            '.stream-display-ad__frame_squeezeback',
+            '.persistent-player',
+            '.tw-overlay-ad',
+            '.avap-ads-container',
+            '.video-ads',
+            '.ad-showing',
+            '.player-ad-overlay',
+            '.CoreText-sc-1txzju1-0.cVgnVN',
+            'button[aria-label="Leave feedback for this Ad"]'
+        ];
+
+        elementsToRemove.push(...liveAdSelectors);
+
+        // Optional: Mute ad-playing video
+        const video = document.querySelector('video');
+        const adIndicator = document.querySelector('.ad-showing, [data-a-target="video-ad-label"]');
+        if (video && adIndicator) {
+            video.muted = true;
+        }
+    }
+
     elementsToRemove.forEach(selector => {
         document.querySelectorAll(selector).forEach(el => {
             if (replaceAds) {
