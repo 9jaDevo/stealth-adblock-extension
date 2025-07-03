@@ -1,3 +1,4 @@
+
 # Stealth Ad & Tracker Blocker (Chrome Extension)
 
 🚫 A powerful, stealthy, privacy-first Chrome extension that blocks ads, trackers, and malvertising—just like ExpressVPN’s ad blocker. Customize your browsing experience with features like ad replacement, dark mode, sync settings, and more.
@@ -14,6 +15,16 @@
 - 📋 Custom whitelists: Choose which websites are allowed to show ads.
 - 🛠️ User-friendly options: Configure everything from a clean options page.
 
+## 🆕 Changelog
+
+### v1.1.0
+
+- ✅ Added support for live video ad containers (e.g., Twitch) without referencing platform name
+- ✅ Removed unused `scripting` permission for Chrome compliance
+- ✅ Real-time whitelist and pause detection improvements (no more manual reloads)
+- ✅ Expanded ad selector coverage and hardened content blocking
+- ✅ General bug fixes and stealth optimizations
+
 ## 🧩 How to Install Locally
 
 1. Clone or Download this Repository
@@ -24,12 +35,12 @@
 
 ## 📁 Project Structure
 
-/replacement/         → Ad replacement images (cat.jpg, dog.jpg, nature.jpg)
-background.js         → Handles network-level ad blocking
-content.js            → Removes or replaces ad elements in the DOM
-manifest.json         → Chrome extension config
-options.html/.js      → User settings interface
-popup.html            → Popup UI for quick access
+/replacement/         → Ad replacement images (cat.jpg, dog.jpg, nature.jpg)  
+background.js         → Handles network-level ad blocking  
+content.js            → Removes or replaces ad elements in the DOM  
+manifest.json         → Chrome extension config  
+options.html/.js      → User settings interface  
+popup.html            → Popup UI for quick access  
 
 ## 📦 Coming Soon
 
