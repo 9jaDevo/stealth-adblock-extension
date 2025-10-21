@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
     "name": "Stealth Ad & Tracker Blocker",
-    "version": "1.1",
-    "description": "Blocks ads, popups, trackers, and malvertising stealthily.",
+    "version": "1.2",
+    "description": "Blocks ads, popups, trackers, and malvertising stealthily, including advanced live streaming ad blocking.",
     "permissions": [
         "storage",
         "declarativeNetRequest",

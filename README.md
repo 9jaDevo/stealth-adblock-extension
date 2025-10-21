@@ -17,6 +17,12 @@
 
 ## 🆕 Changelog
 
+### v1.2
+- ✨ Improved support for live streaming platforms (like Twitch).
+- 🔇 Automatically mute live video ads where possible.
+- 📈 More resilient selectors for dynamic ad containers.
+- 📦 Updated manifest and code cleanup for Chrome Store compliance.
+  
 ### v1.1.0
 
 - ✅ Added support for live video ad containers (e.g., Twitch) without referencing platform name
