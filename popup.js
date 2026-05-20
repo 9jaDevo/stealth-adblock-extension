@@ -1,44 +1,87 @@
 document.addEventListener("DOMContentLoaded", () => {
     const pauseToggle = document.getElementById("pauseToggle");
     const whitelistBtn = document.getElementById("whitelistCurrent");
+    const statusEl = document.getElementById("status");
+    const messageEl = document.getElementById("message");
+    const tabCountEl = document.getElementById("tabCount");
+    const todayCountEl = document.getElementById("todayCount");
+    const totalCountEl = document.getElementById("totalCount");
 
-    // Dark mode
-    chrome.storage.sync.get(['darkMode', 'isPaused'], ({ darkMode, isPaused }) => {
-        if (darkMode) document.body.classList.add("dark");
-        pauseToggle.checked = isPaused || false;
-    });
+    let messageTimer = null;
+    function showMessage(text) {
+        messageEl.textContent = text;
+        if (messageTimer) clearTimeout(messageTimer);
+        messageTimer = setTimeout(() => { messageEl.textContent = ""; }, 3000);
+    }
 
-    // Toggle pause
-    pauseToggle.addEventListener("change", (e) => {
-        chrome.storage.sync.set({ isPaused: e.target.checked }, () => {
-            alert("Pause state updated. Please reload the page for changes to take effect.");
-            //setTimeout(() => chrome.tabs.reload(), 200);
-        });
-    });
+    function todayKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+    }
 
-    // Whitelist current domain
-    whitelistBtn.addEventListener("click", () => {
+    function reloadActiveTab() {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            try {
-                const hostname = new URL(tabs[0].url).hostname;
-                chrome.storage.sync.get('whitelist', ({ whitelist = [] }) => {
-                    if (!whitelist.includes(hostname)) {
-                        whitelist.push(hostname);
-                        chrome.storage.sync.set({ whitelist }, () => {
-                            alert(`${hostname} has been added to your whitelist. Please reload the page.`);
-                            // setTimeout(() => chrome.tabs.reload(), 200);
-                        });
-                    } else {
-                        alert(`${hostname} is already whitelisted.`);
-                    }
-                });
-            } catch (err) {
-                console.error("Could not extract hostname:", err);
-                alert("Invalid URL or unsupported tab.");
+            if (tabs[0]?.id != null) chrome.tabs.reload(tabs[0].id);
+        });
+    }
+
+    // Initial UI state
+    chrome.storage.sync.get(["darkMode", "isPaused"], ({ darkMode, isPaused }) => {
+        if (darkMode) document.body.classList.add("dark");
+        pauseToggle.checked = !!isPaused;
+        statusEl.textContent = isPaused ? "Paused" : "Enabled";
+    });
+
+    chrome.storage.local.get("stats", ({ stats = { total: 0, days: {} } }) => {
+        totalCountEl.textContent = stats.total || 0;
+        todayCountEl.textContent = (stats.days && stats.days[todayKey()]) || 0;
+    });
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tabId = tabs[0]?.id;
+        if (tabId == null) return;
+        chrome.runtime.sendMessage({ type: "GET_TAB_COUNT", tabId }, (resp) => {
+            if (resp && typeof resp.count === "number") {
+                tabCountEl.textContent = resp.count;
             }
         });
     });
 
-    // Link to options
-    document.getElementById("openOptions").onclick = () => chrome.runtime.openOptionsPage();
+    // Pause toggle
+    pauseToggle.addEventListener("change", (e) => {
+        chrome.storage.sync.set({ isPaused: e.target.checked }, () => {
+            statusEl.textContent = e.target.checked ? "Paused" : "Enabled";
+            showMessage("Reloading page...");
+            setTimeout(reloadActiveTab, 250);
+        });
+    });
+
+    // Whitelist current site
+    whitelistBtn.addEventListener("click", () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const url = tabs[0]?.url;
+            if (!url) return showMessage("No active tab.");
+            let hostname;
+            try { hostname = new URL(url).hostname; }
+            catch { return showMessage("Unsupported page."); }
+            if (!hostname) return showMessage("Unsupported page.");
+
+            chrome.storage.sync.get("whitelist", ({ whitelist = [] }) => {
+                if (whitelist.includes(hostname)) {
+                    showMessage(`${hostname} already whitelisted.`);
+                    return;
+                }
+                whitelist.push(hostname);
+                chrome.storage.sync.set({ whitelist }, () => {
+                    showMessage(`${hostname} whitelisted. Reloading...`);
+                    setTimeout(reloadActiveTab, 250);
+                });
+            });
+        });
+    });
+
+    document.getElementById("openOptions").addEventListener("click", () => {
+        chrome.runtime.openOptionsPage();
+    });
 });
+

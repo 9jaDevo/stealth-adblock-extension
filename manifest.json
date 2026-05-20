@@ -1,12 +1,13 @@
 {
     "manifest_version": 3,
     "name": "Stealth Ad & Tracker Blocker",
-    "version": "1.2",
-    "description": "Blocks ads, popups, trackers, and malvertising stealthily, including advanced live streaming ad blocking.",
+    "version": "2.0",
+    "description": "Blocks ads, popups, trackers, cookie banners, social trackers, and malvertising with dynamic DOM observation and live statistics.",
     "permissions": [
         "storage",
         "declarativeNetRequest",
-        "tabs"
+        "tabs",
+        "contextMenus"
     ],
     "host_permissions": [
         "<all_urls>"
@@ -23,6 +24,18 @@
         "service_worker": "background.js"
     },
     "options_page": "options.html",
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start",
+            "all_frames": true
+        }
+    ],
     "web_accessible_resources": [
         {
             "resources": [
